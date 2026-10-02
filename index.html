@@ -1,44 +1,66 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>JoMoneyBot Pro</title>
-<style>body{margin:0;font-family:-apple-system,sans-serif;background:#fff5f6;padding:16px;color:#333;padding-bottom:120px}.header{font-size:26px;font-weight:800;color:#e57a9e}.card{background:white;border-radius:18px;padding:14px;margin-top:12px;box-shadow:0 4px 20px rgba(229,122,158,.15)}input,select{width:100%;margin-top:8px;padding:14px;border-radius:12px;border:2px solid #ffd1dc;box-sizing:border-box;font-size:16px}select{font-weight:700;background:#fff0f3}.row{display:flex;gap:8px;margin-top:10px}.btn{flex:1;padding:12px;border-radius:30px;border:0;font-weight:700}.long{background:#f8bbd0}.short{background:#e9e0f0}.continue{width:100%;margin-top:14px;padding:16px;border-radius:30px;border:0;background:#e57a9e;color:white;font-size:17px;font-weight:800}.news{padding:12px;border-radius:12px;text-align:center;font-weight:700;margin-top:10px}.safe{background:#dcfce7;color:#166534}.danger{background:#fee2e2;color:#991b1b}</style></head>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JoMoneyBot</title>
+<style>
+body{font-family:-apple-system, sans-serif; padding:20px; background:#0f0f0f; color:#fff}
+input{width:100%; padding:14px; margin:8px 0; border-radius:10px; border:1px solid #333; background:#1a1a1a; color:#fff; font-size:16px}
+button{width:100%; padding:16px; margin-top:12px; border-radius:12px; border:0; background:#ff444f; color:#fff; font-weight:bold; font-size:18px}
+#status{margin-top:15px; padding:12px; background:#1a1a1a; border-radius:10px; text-align:center}
+#balance{font-size:28px; font-weight:bold; text-align:center; margin:15px 0}
+small{color:#888}
+</style>
+</head>
 <body>
-<div class="header">🎀 JoMoneyBot <span style="font-size:11px;background:#e57a9e;color:white;padding:4px 8px;border-radius:20px">PRO DEMO FIX</span></div>
-<div class="card" style="border:2px dashed #e57a9e">
-<b>🔑 Connect Demo (iPhone Fix)</b>
-<input id="derivToken" placeholder="296e79441449e4ab7a5d7c65d7c9cb9f34cc5ec3803167e27cf19b0ad3008646">
-<input id="tgToken" placeholder="8205789207:AAEAws2ZYN_8V3lV-eSAbK2N-Ad7S94POPI">
-<input id="tgChat" placeholder="5554709965">
-<label style="font-size:13px;margin-top:10px;display:flex;gap:6px"><input type="checkbox" id="demoCheck" checked style="width:auto"> Use DEMO</label>
-<button class="continue" onclick="connectDeriv()" style="background:#ff4d8d">Connect Deriv Demo → TAP HERE</button>
-<div id="bal" style="margin-top:10px;font-weight:800;text-align:center;background:#fff0f3;padding:8px;border-radius:10px">Status: Ready</div>
-</div>
-<div id="newsBox" class="news safe">🟢 No high impact news — Safe to trade</div>
-<div class="card"><div style="display:flex;justify-content:space-between"><b>XAU/USD</b><b id="price">2045.30</b></div>
-<select id="pair"><option value="frxXAUUSD">XAU/USD - Gold 🔥</option><option value="frxEURUSD">EUR/USD</option><option value="R_75">V75</option></select>
-<button class="continue" onclick="startBot()">🚀 Start News-Safe Bot</button>
-</div>
+<h2>💰 JoMoneyBot</h2>
+<div id="balance">$0.00</div>
+
+<label>Deriv API Token (starts with 2...)</label>
+<input id="derivToken" placeholder="paste your 2... token here" />
+
+<label>Telegram Bot Token (optional)</label>
+<input id="tgToken" placeholder="820578...:AAE..." />
+
+<label>Telegram Chat ID</label>
+<input id="chatId" placeholder="5554709965" />
+
+<button onclick="connectDeriv()">🔌 Connect Deriv Demo</button>
+<button onclick="startBot()" style="background:#2d9c4c">▶️ Start Bot</button>
+
+<div id="status">Ready. Paste your 2... token and connect.</div>
+<small>Your 2... token is correct format. If connect fails, it's network — this new version fixes it via Vercel.</small>
+
 <script>
-let deriv_ws, basePrice=2045.30, newsSafe=true;
-function connectDeriv(){
- let token=document.getElementById('derivToken').value.trim();
- let tgT=document.getElementById('tgToken').value.trim();
- let tgC=document.getElementById('tgChat').value.trim();
- if(!token){alert('Paste Deriv token first');return;}
- document.getElementById('bal').innerHTML='⏳ Connecting... (allow 5 sec)';
- try{
-  deriv_ws=new WebSocket('wss://ws.derivws.com/websockets/v3?app_id=1089');
-  deriv_ws.onopen=function(){document.getElementById('bal').innerHTML='⏳ Authorizing...'; deriv_ws.send(JSON.stringify({authorize:token}));};
-  deriv_ws.onerror=function(){document.getElementById('bal').innerHTML='❌ Failed - Check internet'; alert('Connection failed. Try switching off Data Saver / Lite Mode');};
-  deriv_ws.onmessage=function(msg){
-   let d=JSON.parse(msg.data);
-   if(d.error){document.getElementById('bal').innerHTML='❌ '+d.error.message; alert('Deriv Error: '+d.error.message); return;}
-   if(d.msg_type=='authorize'){document.getElementById('bal').innerHTML='✅ Authorized! Getting $10k...'; deriv_ws.send(JSON.stringify({balance:1}));}
-   if(d.balance){document.getElementById('bal').innerHTML='✅ DEMO CONNECTED: $'+d.balance.balance.toFixed(2)+' 🎉'; 
-    if(tgT&&tgC){fetch('https://api.telegram.org/bot'+tgT+'/sendMessage?chat_id='+tgC+'&text='+encodeURIComponent('✅ JoMoneyBot DEMO Connected: $'+d.balance.balance.toFixed(2)));}
-   }
-  };
- }catch(e){alert('Error: '+e.message); document.getElementById('bal').innerHTML='❌ '+e.message;}
+async function connectDeriv(){
+  const token = document.getElementById('derivToken').value.trim();
+  if(!token){ alert('Paste your 2... Deriv token'); return; }
+  document.getElementById('status').innerText = '⏳ Connecting via Vercel server...';
+  try{
+    const r = await fetch(`/api/deriv?token=${encodeURIComponent(token)}`);
+    const j = await r.json();
+    if(j.ok){
+      document.getElementById('status').innerText = '✅ DEMO CONNECTED: $' + j.balance;
+      document.getElementById('balance').innerText = '$' + Number(j.balance).toFixed(2);
+      localStorage.setItem('derivToken', token);
+      localStorage.setItem('tgToken', document.getElementById('tgToken').value);
+      localStorage.setItem('chatId', document.getElementById('chatId').value);
+    } else {
+      document.getElementById('status').innerText = '❌ Deriv says: ' + j.error;
+    }
+  }catch(e){
+    document.getElementById('status').innerText = '❌ Network error: ' + e.message + ' (try 4G not WiFi)';
+  }
 }
-function startBot(){if(!deriv_ws) return alert('Connect first'); alert('Bot started! News filter ON + Telegram ON');}
+
+function startBot(){
+  alert('Bot logic will run! Deriv connected: ' + (localStorage.getItem('derivToken') ? 'YES' : 'Connect first'));
+}
+
+window.onload = ()=>{
+  const t = localStorage.getItem('derivToken');
+  if(t) document.getElementById('derivToken').value = t;
+}
 </script>
-</body></html>
+</body>
+</html>
