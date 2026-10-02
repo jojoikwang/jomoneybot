@@ -1,20 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JoMoneyBot</title>
 <style>
-body{background:#fff8f6;font-family:sans-serif;margin:0;padding:15px;color:#4a2a40}
-.card{background:white;border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 12px #f9d6d6}
-.header{font-size:28px;font-weight:800;color:#c97a9a}
-.pink{background:#f8bbd0;color:white;border:none;padding:12px 20px;border-radius:14px;font-weight:700}
-.grey{background:#ece6f0;color:#9a8aa0;border:none;padding:12px 20px;border-radius:14px;font-weight:700}
-.lots{display:flex;align-items:center;gap:10px;justify-content:space-between}
-.btn{width:36px;height:36px;border-radius:50%;border:none;background:#f8bbd0;color:white;font-size:20px}
-.preset{display:flex;gap:8px}
-.preset div{flex:1;background:#f3e8ff;border-radius:16px;padding:12px;text-align:center;border:2px solid transparent}
-.preset .active{background:#f8bbd0;color:white;border-color:#f48fb1}
-.continue{width:100%;background:#f48fb1;color:white;border:none;padding:18px;border-radius:20px;font-size:18px;font-weight:800;margin-top:15px}
+  body{margin:0;font-family: -apple-system,BlinkMacSystemFont,sans-serif;background:#fff5f6;padding:20px;color:#333}
+  .header{font-size:28px;font-weight:800;color:#e57a9e}
+  .card{background:white;border-radius:18px;padding:16px;margin-top:16px;box-shadow:0 4px 20px rgba(229,122,158,.15)}
+  .label{font-weight:700;font-size:16px}
+  select{width:100%;margin-top:10px;padding:14px;border-radius:12px;border:2px solid #ffd1dc;font-weight:700;font-size:16px;background:#fff0f3}
+  .row{display:flex;gap:10px;margin-top:12px}
+  .btn{flex:1;padding:12px;border-radius:30px;border:0;font-weight:700;cursor:pointer}
+  .long{background:#f8bbd0;color:#a33a5a}
+  .long.active{background:#e57a9e;color:white}
+  .short{background:#e9e0f0;color:#6a5a7a}
+  .short.active{background:#8e7cc3;color:white}
+  .size-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+  .circle{width:38px;height:38px;border-radius:50%;border:0;background:#f8bbd0;font-size:20px;cursor:pointer}
+  .preset{display:flex;gap:8px;margin-top:10px}
+  .preset button{flex:1;padding:12px;border-radius:14px;border:0;background:#efe6f5;font-size:13px;font-weight:600}
+  .preset button.active{background:#e57a9e;color:white}
+  .continue{width:100%;margin-top:20px;padding:16px;border-radius:30px;border:0;background:#e57a9e;color:white;font-size:18px;font-weight:800}
 </style>
 </head>
 <body>
@@ -22,42 +29,84 @@ body{background:#fff8f6;font-family:sans-serif;margin:0;padding:15px;color:#4a2a
 <p>Trading Bot Setup • Step 2 of 3</p>
 
 <div class="card">
-<b>EUR/USD</b> <span style="float:right;font-weight:800">0.87103</span><br>
-<small>Euro / US Dollar</small><br><br>
-<button class="pink" id="longBtn" onclick="setDir('long')">↑ Long</button>
-<button class="grey" id="shortBtn" onclick="setDir('short')">↓ Short</button>
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div class="label" id="pairLabel">EUR/USD</div>
+      <small id="pairDesc">Euro / US Dollar</small>
+    </div>
+    <b id="price">0.87103</b>
+  </div>
+
+  <label style="display:block;margin-top:14px;font-weight:600;font-size:13px">Choose Pair:</label>
+  <select id="pairSelect" onchange="changePair()">
+    <option value="EUR/USD|Euro / US Dollar|0.87103">EUR/USD - Euro / US Dollar</option>
+    <option value="GBP/USD|British Pound / US Dollar|1.27341">GBP/USD - British Pound</option>
+    <option value="USD/JPY|US Dollar / Japanese Yen|148.52">USD/JPY - Dollar / Yen</option>
+    <option value="XAU/USD|Gold / US Dollar|2045.30">XAU/USD - Gold 🔥</option>
+    <option value="BTC/USD|Bitcoin / US Dollar|67320.00">BTC/USD - Bitcoin</option>
+    <option value="V75|Volatility 75 Index|124578.34">Synthetic - Volatility 75 Index</option>
+    <option value="USD/CHF|US Dollar / Swiss Franc|0.88210">USD/CHF - Dollar / Franc</option>
+    <option value="GBP/JPY|British Pound / Japanese Yen|189.24">GBP/JPY - Pound / Yen</option>
+  </select>
+
+  <div class="row">
+    <button class="btn long active" id="longBtn" onclick="setDir('LONG')">↑ Long</button>
+    <button class="btn short" id="shortBtn" onclick="setDir('SHORT')">↓ Short</button>
+  </div>
 </div>
 
-<div class="card" style="background:#f3e8ff">
-<b>Position Size</b>
-<div class="lots">
-<span>Lots</span>
-<div>
-<button class="btn" onclick="changeLot(-0.1)">−</button>
-<span id="lot" style="margin:0 10px;font-weight:800">0.2 lot</span>
-<button class="btn" onclick="changeLot(0.1)">+</button>
-</div>
-</div>
-<small id="margin">≈ $20.00 margin • Risk: Low</small>
+<div class="card" style="background:#efe6ff">
+  <div class="label">Position Size</div>
+  <div class="size-row">
+    <span>Lots</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="circle" onclick="changeLot(-0.1)">−</button>
+      <b id="lot">0.2 lot</b>
+      <button class="circle" onclick="changeLot(0.1)">+</button>
+    </div>
+  </div>
+  <small id="margin">≈ $20.00 margin • Risk: Low</small>
 </div>
 
 <div class="card">
-<b>✨ AI Preset</b>
-<div class="preset" style="margin-top:10px">
-<div id="c1" onclick="setPreset('c1')">Conservative<br><small>Low risk</small></div>
-<div id="c2" class="active" onclick="setPreset('c2')">Optimal Beta<br><small>Balanced</small></div>
-<div id="c3" onclick="setPreset('c3')">Aggressive<br><small>High risk</small></div>
-</div>
+  <div class="label">✨ AI Preset</div>
+  <div class="preset">
+    <button id="p1" onclick="setPreset('Conservative Low risk','p1')">Conservative<br><small>Low risk</small></button>
+    <button id="p2" class="active" onclick="setPreset('Optimal Beta Balanced','p2')">Optimal Beta<br><small>Balanced</small></button>
+    <button id="p3" onclick="setPreset('Aggressive High risk','p3')">Aggressive<br><small>High risk</small></button>
+  </div>
 </div>
 
-<button class="continue" onclick="go()">Continue →</button>
+<button class="continue" onclick="startBot()">Continue →</button>
 
 <script>
-let lot=0.2, dir='long', preset='Optimal Beta'
-function changeLot(d){lot=Math.max(0.1,+(lot+d).toFixed(1));document.getElementById('lot').innerText=lot+' lot';document.getElementById('margin').innerText='≈ $'+(lot*100).toFixed(2)+' margin • Risk: '+(lot<0.3?'Low':'High')}
-function setDir(d){dir=d;document.getElementById('longBtn').className=d=='long'?'pink':'grey';document.getElementById('shortBtn').className=d=='short'?'pink':'grey'}
-function setPreset(id){document.querySelectorAll('.preset div').forEach(e=>e.classList.remove('active'));document.getElementById(id).classList.add('active');preset=document.getElementById(id).innerText}
-function go(){alert('JoMoneyBot will start: '+dir.toUpperCase()+' '+lot+' lot EUR/USD with '+preset)}
+let dir='LONG'; let lot=0.2; let preset='Optimal Beta Balanced';
+function changePair(){
+  let v=document.getElementById('pairSelect').value.split('|');
+  document.getElementById('pairLabel').innerText=v[0];
+  document.getElementById('pairDesc').innerText=v[1];
+  document.getElementById('price').innerText=v[2];
+}
+function setDir(d){
+  dir=d;
+  document.getElementById('longBtn').className=d=='LONG'?'btn long active':'btn long';
+  document.getElementById('shortBtn').className=d=='SHORT'?'btn short active':'btn short';
+}
+function changeLot(c){
+  lot=Math.round((lot+c)*10)/10;
+  if(lot<0.1) lot=0.1;
+  document.getElementById('lot').innerText=lot+' lot';
+  document.getElementById('margin').innerText='≈ $'+(lot*100).toFixed(2)+' margin • Risk: '+(lot<0.5?'Low':lot<1?'Medium':'High');
+}
+function setPreset(name,id){
+  preset=name;
+  document.querySelectorAll('.preset button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function startBot(){
+  let pair=document.getElementById('pairLabel').innerText;
+  alert('JoMoneyBot will start: '+dir+' '+lot+' lot '+pair+' with '+preset);
+}
 </script>
 </body>
 </html>
