@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JoMoneyBot</title>
+<style>
+body{background:#fff8f6;font-family:sans-serif;margin:0;padding:15px;color:#4a2a40}
+.card{background:white;border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 12px #f9d6d6}
+.header{font-size:28px;font-weight:800;color:#c97a9a}
+.pink{background:#f8bbd0;color:white;border:none;padding:12px 20px;border-radius:14px;font-weight:700}
+.grey{background:#ece6f0;color:#9a8aa0;border:none;padding:12px 20px;border-radius:14px;font-weight:700}
+.lots{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.btn{width:36px;height:36px;border-radius:50%;border:none;background:#f8bbd0;color:white;font-size:20px}
+.preset{display:flex;gap:8px}
+.preset div{flex:1;background:#f3e8ff;border-radius:16px;padding:12px;text-align:center;border:2px solid transparent}
+.preset .active{background:#f8bbd0;color:white;border-color:#f48fb1}
+.continue{width:100%;background:#f48fb1;color:white;border:none;padding:18px;border-radius:20px;font-size:18px;font-weight:800;margin-top:15px}
+</style>
+</head>
+<body>
+<div class="header">🎀 JoMoneyBot</div>
+<p>Trading Bot Setup • Step 2 of 3</p>
+
+<div class="card">
+<b>EUR/USD</b> <span style="float:right;font-weight:800">0.87103</span><br>
+<small>Euro / US Dollar</small><br><br>
+<button class="pink" id="longBtn" onclick="setDir('long')">↑ Long</button>
+<button class="grey" id="shortBtn" onclick="setDir('short')">↓ Short</button>
+</div>
+
+<div class="card" style="background:#f3e8ff">
+<b>Position Size</b>
+<div class="lots">
+<span>Lots</span>
+<div>
+<button class="btn" onclick="changeLot(-0.1)">−</button>
+<span id="lot" style="margin:0 10px;font-weight:800">0.2 lot</span>
+<button class="btn" onclick="changeLot(0.1)">+</button>
+</div>
+</div>
+<small id="margin">≈ $20.00 margin • Risk: Low</small>
+</div>
+
+<div class="card">
+<b>✨ AI Preset</b>
+<div class="preset" style="margin-top:10px">
+<div id="c1" onclick="setPreset('c1')">Conservative<br><small>Low risk</small></div>
+<div id="c2" class="active" onclick="setPreset('c2')">Optimal Beta<br><small>Balanced</small></div>
+<div id="c3" onclick="setPreset('c3')">Aggressive<br><small>High risk</small></div>
+</div>
+</div>
+
+<button class="continue" onclick="go()">Continue →</button>
+
+<script>
+let lot=0.2, dir='long', preset='Optimal Beta'
+function changeLot(d){lot=Math.max(0.1,+(lot+d).toFixed(1));document.getElementById('lot').innerText=lot+' lot';document.getElementById('margin').innerText='≈ $'+(lot*100).toFixed(2)+' margin • Risk: '+(lot<0.3?'Low':'High')}
+function setDir(d){dir=d;document.getElementById('longBtn').className=d=='long'?'pink':'grey';document.getElementById('shortBtn').className=d=='short'?'pink':'grey'}
+function setPreset(id){document.querySelectorAll('.preset div').forEach(e=>e.classList.remove('active'));document.getElementById(id).classList.add('active');preset=document.getElementById(id).innerText}
+function go(){alert('JoMoneyBot will start: '+dir.toUpperCase()+' '+lot+' lot EUR/USD with '+preset)}
+</script>
+</body>
+</html>
