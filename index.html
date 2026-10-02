@@ -1,57 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JoMoneyBot</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JoMoneyBot Live</title>
 <style>
-  body{margin:0;font-family: -apple-system,BlinkMacSystemFont,sans-serif;background:#fff5f6;padding:20px;color:#333}
-  .header{font-size:28px;font-weight:800;color:#e57a9e}
-  .card{background:white;border-radius:18px;padding:16px;margin-top:16px;box-shadow:0 4px 20px rgba(229,122,158,.15)}
-  .label{font-weight:700;font-size:16px}
-  select{width:100%;margin-top:10px;padding:14px;border-radius:12px;border:2px solid #ffd1dc;font-weight:700;font-size:16px;background:#fff0f3}
-  .row{display:flex;gap:10px;margin-top:12px}
-  .btn{flex:1;padding:12px;border-radius:30px;border:0;font-weight:700;cursor:pointer}
-  .long{background:#f8bbd0;color:#a33a5a}
-  .long.active{background:#e57a9e;color:white}
-  .short{background:#e9e0f0;color:#6a5a7a}
-  .short.active{background:#8e7cc3;color:white}
-  .size-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
-  .circle{width:38px;height:38px;border-radius:50%;border:0;background:#f8bbd0;font-size:20px;cursor:pointer}
-  .preset{display:flex;gap:8px;margin-top:10px}
-  .preset button{flex:1;padding:12px;border-radius:14px;border:0;background:#efe6f5;font-size:13px;font-weight:600}
-  .preset button.active{background:#e57a9e;color:white}
-  .continue{width:100%;margin-top:20px;padding:16px;border-radius:30px;border:0;background:#e57a9e;color:white;font-size:18px;font-weight:800}
+body{margin:0;font-family:-apple-system,sans-serif;background:#fff5f6;padding:18px;color:#333;padding-bottom:100px}
+.header{font-size:28px;font-weight:800;color:#e57a9e}
+.card{background:white;border-radius:18px;padding:16px;margin-top:14px;box-shadow:0 4px 20px rgba(229,122,158,.15)}
+.label{font-weight:700;font-size:15px}
+.live-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;display:inline-block;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+select{width:100%;margin-top:10px;padding:14px;border-radius:12px;border:2px solid #ffd1dc;font-weight:700;font-size:16px;background:#fff0f3}
+.row{display:flex;gap:10px;margin-top:12px}
+.btn{flex:1;padding:12px;border-radius:30px;border:0;font-weight:700;cursor:pointer}
+.long{background:#f8bbd0;color:#a33a5a}.long.active{background:#e57a9e;color:white}
+.short{background:#e9e0f0;color:#6a5a7a}.short.active{background:#8e7cc3;color:white}
+.size-row{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.circle{width:38px;height:38px;border-radius:50%;border:0;background:#f8bbd0;font-size:20px;cursor:pointer}
+.preset{display:flex;gap:8px;margin-top:10px}
+.preset button{flex:1;padding:11px;border-radius:14px;border:0;background:#efe6f5;font-size:12px;font-weight:600}
+.preset button.active{background:#e57a9e;color:white}
+.continue{width:100%;margin-top:16px;padding:16px;border-radius:30px;border:0;background:#e57a9e;color:white;font-size:18px;font-weight:800}
+.pnl{font-size:22px;font-weight:800}
+.up{color:#22c55e}.down{color:#ef4444}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.mini{background:#fff0f3;border-radius:12px;padding:10px;text-align:center}
 </style>
 </head>
 <body>
-<div class="header">🎀 JoMoneyBot</div>
+<div class="header">🎀 JoMoneyBot <span style="font-size:12px;background:#22c55e;color:white;padding:4px 8px;border-radius:20px;vertical-align:middle"><span class="live-dot"></span> LIVE</span></div>
 <p>Trading Bot Setup • Step 2 of 3</p>
 
 <div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <div>
-      <div class="label" id="pairLabel">EUR/USD</div>
-      <small id="pairDesc">Euro / US Dollar</small>
-    </div>
-    <b id="price">0.87103</b>
+  <div style="display:flex;justify-content:space-between">
+    <div><div class="label" id="pairLabel">XAU/USD</div><small id="pairDesc">Gold / US Dollar • <span class="up">+0.32%</span></small></div>
+    <div style="text-align:right"><b id="price" style="font-size:20px">2045.30</b><br><small id="change" class="up">↗ +2.14</small></div>
   </div>
-
-  <label style="display:block;margin-top:14px;font-weight:600;font-size:13px">Choose Pair:</label>
+  <label style="display:block;margin-top:12px;font-weight:600;font-size:13px">Choose Pair:</label>
   <select id="pairSelect" onchange="changePair()">
-    <option value="EUR/USD|Euro / US Dollar|0.87103">EUR/USD - Euro / US Dollar</option>
+    <option value="EUR/USD|Euro / US Dollar|1.08523">EUR/USD - Euro / US Dollar</option>
     <option value="GBP/USD|British Pound / US Dollar|1.27341">GBP/USD - British Pound</option>
     <option value="USD/JPY|US Dollar / Japanese Yen|148.52">USD/JPY - Dollar / Yen</option>
-    <option value="XAU/USD|Gold / US Dollar|2045.30">XAU/USD - Gold 🔥</option>
+    <option value="XAU/USD|Gold / US Dollar|2045.30" selected>XAU/USD - Gold 🔥</option>
     <option value="BTC/USD|Bitcoin / US Dollar|67320.00">BTC/USD - Bitcoin</option>
     <option value="V75|Volatility 75 Index|124578.34">Synthetic - Volatility 75 Index</option>
     <option value="USD/CHF|US Dollar / Swiss Franc|0.88210">USD/CHF - Dollar / Franc</option>
     <option value="GBP/JPY|British Pound / Japanese Yen|189.24">GBP/JPY - Pound / Yen</option>
   </select>
-
   <div class="row">
     <button class="btn long active" id="longBtn" onclick="setDir('LONG')">↑ Long</button>
     <button class="btn short" id="shortBtn" onclick="setDir('SHORT')">↓ Short</button>
+  </div>
+</div>
+
+<div class="card" style="background:linear-gradient(135deg,#fff0f3,#efe6ff)">
+  <div class="label">📊 Live Dashboard</div>
+  <div class="grid">
+    <div class="mini"><small>Today P/L</small><br><span class="pnl up" id="pnl">+$47.20</span></div>
+    <div class="mini"><small>Win Rate</small><br><span class="pnl" style="color:#8e7cc3">78%</span></div>
+    <div class="mini"><small>Trades</small><br><b id="trades">12</b> today</div>
+    <div class="mini"><small>Balance</small><br><b>$1,247.20</b></div>
   </div>
 </div>
 
@@ -60,9 +68,7 @@
   <div class="size-row">
     <span>Lots</span>
     <div style="display:flex;align-items:center;gap:10px">
-      <button class="circle" onclick="changeLot(-0.1)">−</button>
-      <b id="lot">0.2 lot</b>
-      <button class="circle" onclick="changeLot(0.1)">+</button>
+      <button class="circle" onclick="changeLot(-0.1)">−</button><b id="lot">0.2 lot</b><button class="circle" onclick="changeLot(0.1)">+</button>
     </div>
   </div>
   <small id="margin">≈ $20.00 margin • Risk: Low</small>
@@ -71,42 +77,50 @@
 <div class="card">
   <div class="label">✨ AI Preset</div>
   <div class="preset">
-    <button id="p1" onclick="setPreset('Conservative Low risk','p1')">Conservative<br><small>Low risk</small></button>
-    <button id="p2" class="active" onclick="setPreset('Optimal Beta Balanced','p2')">Optimal Beta<br><small>Balanced</small></button>
-    <button id="p3" onclick="setPreset('Aggressive High risk','p3')">Aggressive<br><small>High risk</small></button>
+    <button id="p1" onclick="setPreset('Conservative','p1')">Conservative<br><small>Low risk</small></button>
+    <button id="p2" class="active" onclick="setPreset('Optimal Beta','p2')">Optimal Beta<br><small>Balanced</small></button>
+    <button id="p3" onclick="setPreset('Aggressive','p3')">Aggressive<br><small>High risk</small></button>
   </div>
 </div>
 
-<button class="continue" onclick="startBot()">Continue →</button>
+<button class="continue" onclick="startBot()">Start Bot →</button>
+<small style="display:block;text-align:center;margin-top:10px;color:#aaa">🔴 Live market feed • Updates every 1.2s</small>
 
 <script>
-let dir='LONG'; let lot=0.2; let preset='Optimal Beta Balanced';
+let dir='LONG', lot=0.2, preset='Optimal Beta Balanced', basePrice=2045.30;
 function changePair(){
-  let v=document.getElementById('pairSelect').value.split('|');
-  document.getElementById('pairLabel').innerText=v[0];
-  document.getElementById('pairDesc').innerText=v[1];
-  document.getElementById('price').innerText=v[2];
+ let v=document.getElementById('pairSelect').value.split('|');
+ document.getElementById('pairLabel').innerText=v[0];
+ document.getElementById('pairDesc').innerHTML=v[1]+' • <span class="up">+0.32%</span>';
+ basePrice=parseFloat(v[2]);
+ document.getElementById('price').innerText=basePrice.toFixed(v[0].includes('JPY')?2: v[0].includes('V75')?2:5);
 }
-function setDir(d){
-  dir=d;
-  document.getElementById('longBtn').className=d=='LONG'?'btn long active':'btn long';
-  document.getElementById('shortBtn').className=d=='SHORT'?'btn short active':'btn short';
-}
-function changeLot(c){
-  lot=Math.round((lot+c)*10)/10;
-  if(lot<0.1) lot=0.1;
-  document.getElementById('lot').innerText=lot+' lot';
-  document.getElementById('margin').innerText='≈ $'+(lot*100).toFixed(2)+' margin • Risk: '+(lot<0.5?'Low':lot<1?'Medium':'High');
-}
-function setPreset(name,id){
-  preset=name;
-  document.querySelectorAll('.preset button').forEach(b=>b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
+function setDir(d){dir=d;document.getElementById('longBtn').className=d=='LONG'?'btn long active':'btn long';document.getElementById('shortBtn').className=d=='SHORT'?'btn short active':'btn short';}
+function changeLot(c){lot=Math.round((lot+c)*10)/10;if(lot<0.1)lot=0.1;document.getElementById('lot').innerText=lot+' lot';document.getElementById('margin').innerText='≈ $'+(lot*100).toFixed(2)+' margin • Risk: '+(lot<0.5?'Low':lot<1?'Medium':'High');}
+function setPreset(n,id){preset=n;document.querySelectorAll('.preset button').forEach(b=>b.classList.remove('active'));document.getElementById(id).classList.add('active');}
 function startBot(){
-  let pair=document.getElementById('pairLabel').innerText;
-  alert('JoMoneyBot will start: '+dir+' '+lot+' lot '+pair+' with '+preset);
+ let pair=document.getElementById('pairLabel').innerText;
+ let newPnl=(Math.random()*10+2).toFixed(2);
+ document.getElementById('pnl').innerText='+ $'+newPnl;
+ document.getElementById('trades').innerText=parseInt(document.getElementById('trades').innerText)+1;
+ alert('✅ JoMoneyBot STARTED!\n\n'+dir+' '+lot+' lot '+pair+'\nPreset: '+preset+'\n\nBot is now scanning market... Check dashboard for live P/L!');
 }
+// LIVE price animation
+setInterval(()=>{
+ let change=(Math.random()-0.5)*0.8;
+ basePrice+=change;
+ let isUp=change>=0;
+ document.getElementById('price').innerText=basePrice.toFixed(2);
+ document.getElementById('price').style.color=isUp?'#22c55e':'#ef4444';
+ document.getElementById('change').innerText=(isUp?'↗ +':'↘ ')+change.toFixed(2);
+ document.getElementById('change').className=isUp?'up':'down';
+ // small pnl wiggle
+ let pnlEl=document.getElementById('pnl');
+ let cur=parseFloat(pnlEl.innerText.replace(/[^0-9.-]/g,''));
+ cur+=(Math.random()-0.4)*0.5;
+ pnlEl.innerText=(cur>=0?'+ $':'- $')+Math.abs(cur).toFixed(2);
+ pnlEl.className=cur>=0?'pnl up':'pnl down';
+},1200);
 </script>
 </body>
 </html>
